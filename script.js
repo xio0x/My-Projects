@@ -113,32 +113,51 @@ function createProjectCard(project) {
     return card;
 }
 
+// Helper function to reset hamburger animation
+function resetHamburgerAnimation(hamburger) {
+    const spans = hamburger.querySelectorAll('span');
+    spans[0].style.transform = 'none';
+    spans[1].style.opacity = '1';
+    spans[2].style.transform = 'none';
+}
+
+// Helper function to activate hamburger animation
+function activateHamburgerAnimation(hamburger) {
+    const spans = hamburger.querySelectorAll('span');
+    spans[0].style.transform = 'rotate(-45deg) translate(-5px, 6px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(45deg) translate(-5px, -6px)';
+}
+
 // Load projects on page load
 document.addEventListener('DOMContentLoaded', () => {
     const projectsGrid = document.getElementById('projectsGrid');
     
-    projects.forEach(project => {
-        const card = createProjectCard(project);
-        projectsGrid.appendChild(card);
-    });
+    // Load projects only if the grid element exists
+    if (projectsGrid) {
+        projects.forEach(project => {
+            const card = createProjectCard(project);
+            projectsGrid.appendChild(card);
+        });
+    }
     
     // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     
+    // Only set up menu if elements exist
+    if (!hamburger || !navMenu) {
+        return;
+    }
+    
     hamburger.addEventListener('click', () => {
         navMenu.classList.toggle('active');
         
         // Animate hamburger icon
-        const spans = hamburger.querySelectorAll('span');
         if (navMenu.classList.contains('active')) {
-            spans[0].style.transform = 'rotate(-45deg) translate(-5px, 6px)';
-            spans[1].style.opacity = '0';
-            spans[2].style.transform = 'rotate(45deg) translate(-5px, -6px)';
+            activateHamburgerAnimation(hamburger);
         } else {
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
+            resetHamburgerAnimation(hamburger);
         }
     });
     
@@ -146,10 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', () => {
             navMenu.classList.remove('active');
-            const spans = hamburger.querySelectorAll('span');
-            spans[0].style.transform = 'none';
-            spans[1].style.opacity = '1';
-            spans[2].style.transform = 'none';
+            resetHamburgerAnimation(hamburger);
         });
     });
     
