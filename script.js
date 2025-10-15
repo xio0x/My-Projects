@@ -116,17 +116,21 @@ function createProjectCard(project) {
 // Helper function to reset hamburger animation
 function resetHamburgerAnimation(hamburger) {
     const spans = hamburger.querySelectorAll('span');
-    spans[0].style.transform = 'none';
-    spans[1].style.opacity = '1';
-    spans[2].style.transform = 'none';
+    if (spans.length >= 3) {
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
 }
 
 // Helper function to activate hamburger animation
 function activateHamburgerAnimation(hamburger) {
     const spans = hamburger.querySelectorAll('span');
-    spans[0].style.transform = 'rotate(-45deg) translate(-5px, 6px)';
-    spans[1].style.opacity = '0';
-    spans[2].style.transform = 'rotate(45deg) translate(-5px, -6px)';
+    if (spans.length >= 3) {
+        spans[0].style.transform = 'rotate(-45deg) translate(-5px, 6px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(45deg) translate(-5px, -6px)';
+    }
 }
 
 // Load projects on page load
@@ -145,29 +149,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     
-    // Only set up menu if elements exist
-    if (!hamburger || !navMenu) {
-        return;
-    }
-    
-    hamburger.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-        
-        // Animate hamburger icon
-        if (navMenu.classList.contains('active')) {
-            activateHamburgerAnimation(hamburger);
-        } else {
-            resetHamburgerAnimation(hamburger);
-        }
-    });
-    
-    // Close mobile menu when clicking on a link
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            resetHamburgerAnimation(hamburger);
+    // Set up mobile menu if elements exist
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            
+            // Animate hamburger icon
+            if (navMenu.classList.contains('active')) {
+                activateHamburgerAnimation(hamburger);
+            } else {
+                resetHamburgerAnimation(hamburger);
+            }
         });
-    });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                resetHamburgerAnimation(hamburger);
+            });
+        });
+    }
     
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
